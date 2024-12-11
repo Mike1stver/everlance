@@ -1,5 +1,6 @@
 class Admin::TasksController < ApplicationController
   before_action :verify_login
+  before_action :set_task, only: [:show, :destroy, :update]
 
   def create
     task = current_user.tasks.create!(permitted_params)
@@ -7,29 +8,22 @@ class Admin::TasksController < ApplicationController
   end
 
   def update
-    task = current_user.tasks.find_by(id: params[:id])
-    task.update!(permitted_params)
+    @task.update!(permitted_params)
     render json: task,  status: :ok
   end
 
   def index
-    tasks = current_user.tasks.where(parse_query_params)
+    tasks = current_user.tasks
+    tasks = tasks.where(parse_query_params) if params[:completed].present?
     render json: tasks, status: :ok
   end
 
   def destroy
-    task = current_user.tasks.find_by(id: params[:id])
-    if task.present?
-      task.destroy!
-      head :no_content
-    else
-      render status: :not_found
-    end
+    @task.destroy!
   end
 
   def show
-    task = current_user.tasks.find_by(id: params[:id])
-    render json: task, status: :ok
+    render json: @task, status: :ok
   end
 
   private
@@ -46,6 +40,10 @@ class Admin::TasksController < ApplicationController
 
   def current_user
     User.find_by(id: session[:user_id])
+  end
+
+  def set_task
+    @task = current_user.tasks.find(params[:id])
   end
 
   def parse_query_params

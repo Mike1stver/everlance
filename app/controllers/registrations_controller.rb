@@ -4,7 +4,6 @@ class RegistrationsController < ApplicationController
     user = User.create!(permitted_params)
 
     if user
-      session[:user_id] = user.id
       render json: user
     else
       render json: {error: "Error"}, status: :internal_server_error
