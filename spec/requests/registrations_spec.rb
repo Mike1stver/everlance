@@ -4,7 +4,7 @@ RSpec.describe "RegistrationsController", type: :request do
   fixtures :users
 
   describe "POST registrations" do
-    let(:valid_user_params) do
+    let(:new_user_params) do
       {
         user: {
           email: "newuser@example.com",
@@ -27,12 +27,12 @@ RSpec.describe "RegistrationsController", type: :request do
     context "when there is a valid parameters" do
       it "creates a new user, return success and the user created" do
         expect {
-          post '/registrations', params: valid_user_params
+          post '/registrations', params: new_user_params
         }.to change(User, :count).by(1)
         expect(response).to have_http_status(200)
 
         body = JSON.parse(response.body)
-        expect(body["email"]).to eq(valid_user_params[:user][:email])
+        expect(body["email"]).to eq(new_user_params[:user][:email])
       end
     end
 
