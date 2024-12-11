@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       render json: user
     else
-      render json: {error: "Error"} status: :not_found
+      render json: {error: "User does not exists or password is incorrect"}, status: :not_found
     end
   end
 

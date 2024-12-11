@@ -7,7 +7,7 @@ class RegistrationsController < ApplicationController
       session[:user_id] = user.id
       render json: user
     else
-      render json: {error: "Error"} status: :internal_server_error
+      render json: {error: "Error"}, status: :internal_server_error
     end
   end
 
